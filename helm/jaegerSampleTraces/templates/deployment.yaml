@@ -39,7 +39,7 @@ spec:
           ports:
             - name: http
               containerPort: 80
-              protocol: TCP
+              protocol: UDP
           # livenessProbe:
           #   httpGet:
           #     path: /
