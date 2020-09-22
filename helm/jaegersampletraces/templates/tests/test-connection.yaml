@@ -3,7 +3,7 @@ kind: Pod
 metadata:
   name: "{{ include "jaegersampletraces.fullname" . }}-test-connection"
   labels:
-    {{- include "jaegersampletraces.labels" . | nindent 4 }}
+{{ include "jaegersampletraces.labels" . | indent 4 }}
   annotations:
     "helm.sh/hook": test-success
 spec:
@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "jaegersampletraces.fullname" . }}:{{ .Values.service.port }}']
+      args:  ['{{ include "jaegersampletraces.fullname" . }}:{{ .Values.service.port }}']
   restartPolicy: Never

@@ -3,13 +3,14 @@ kind: Service
 metadata:
   name: {{ include "jaegersampletraces.fullname" . }}
   labels:
-    {{- include "jaegersampletraces.labels" . | nindent 4 }}
+{{ include "jaegersampletraces.labels" . | indent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
       targetPort: http
-      protocol: UDP
+      protocol: TCP
       name: http
   selector:
-    {{- include "jaegersampletraces.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ include "jaegersampletraces.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
