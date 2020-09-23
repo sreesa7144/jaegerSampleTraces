@@ -33,9 +33,9 @@ spec:
         - name: jaeger-agent-sidecar
           image: jaegertracing/jaeger-agent:latest
           imagePullPolicy: IfNotPresent
-          - env:
-            - name: REPORTER_GRPC_HOST_PORT
-              value: kind-horse-jaeger-collector:14250
+          env:
+          - name: REPORTER_GRPC_HOST_PORT
+            value: "kind-horse-jaeger-collector:14250"
           ports:
             - name: admin
               containerPort: 14271
