@@ -50,7 +50,7 @@ func sampleTest(tracer opentracing.Tracer) {
 func InitJaeger(service string) (opentracing.Tracer, io.Closer) {
 	host := os.Getenv("JAEGER_AGENT_HOST")
 	port := os.Getenv("JAEGER_AGENT_PORT")
-	log.Println("INFO:sending to hostport", host+":"+port)
+	log.Println("----->" + host + ":" + port)
 	tracer, closer, err := config.Configuration{
 		ServiceName: "samplest",
 		Sampler: &config.SamplerConfig{
