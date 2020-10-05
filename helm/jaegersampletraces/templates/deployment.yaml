@@ -24,22 +24,30 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: JAEGER_AGENT_HOST
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: status.hostIP
+          - name: JAEGER_AGENT_PORT
+            value: "6831"
           ports:
             - name: http
               containerPort: 80
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-        - name: jaeger-agent-sidecar
-          image: jaegertracing/jaeger-agent:latest
-          imagePullPolicy: IfNotPresent
-          env:
-          - name: REPORTER_GRPC_HOST_PORT
-            value: "kind-horse-jaeger-collector:14250"
-          ports:
-            - name: admin
-              containerPort: 14271
-              protocol: TCP
+        # - name: jaeger-agent-sidecar
+        #   image: jaegertracing/jaeger-agent:latest
+        #   imagePullPolicy: IfNotPresent
+        #   env:
+        #   - name: REPORTER_GRPC_HOST_PORT
+        #     value: "kind-horse-jaeger-collector:14250"
+        #   ports:
+        #     - name: admin
+        #       containerPort: 14271
+        #       protocol: TCP
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

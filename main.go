@@ -48,16 +48,21 @@ func sampleTest(tracer opentracing.Tracer) {
 }
 
 func InitJaeger(service string) (opentracing.Tracer, io.Closer) {
-	cfg := &config.Configuration{
+	host := os.Getenv("JAEGER_AGENT_HOST")
+	port := os.Getenv("JAEGER_AGENT_PORT")
+	log.Println("INFO:sending to hostport", host+":"+port)
+	tracer, closer, err := config.Configuration{
+		ServiceName: "samplest",
 		Sampler: &config.SamplerConfig{
 			Type:  "const",
 			Param: 1,
 		},
 		Reporter: &config.ReporterConfig{
-			LogSpans: true,
+			LogSpans:           true,
+			LocalAgentHostPort: host + ":" + port,
 		},
-	}
-	tracer, closer, err := cfg.New(service, config.Logger(jaeger.StdLogger))
+	}.NewTracer(config.Logger(jaeger.StdLogger))
+
 	if err != nil {
 		panic(fmt.Sprintf("ERROR: cannot init Jaeger: %v\n", err))
 	}
@@ -65,9 +70,6 @@ func InitJaeger(service string) (opentracing.Tracer, io.Closer) {
 }
 
 func InitSpan(name string, tracer opentracing.Tracer, parentSpan opentracing.Span) opentracing.Span {
-
-	env := os.Getenv("ENVIRONMENT")
-	user := os.Getenv("USERNAME")
 
 	var span opentracing.Span
 
@@ -77,8 +79,8 @@ func InitSpan(name string, tracer opentracing.Tracer, parentSpan opentracing.Spa
 		span = tracer.StartSpan(name, opentracing.ChildOf(parentSpan.Context()))
 	}
 
-	span.SetTag("env", env)
-	span.SetTag("user", user)
+	span.SetTag("env", "env")
+	span.SetTag("user", "user")
 
 	return span
 }
